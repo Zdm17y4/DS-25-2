@@ -1,6 +1,6 @@
 Día 1:
+1. Microsoft Learn — *¿Qué es la entrega continua (CD)?*  
+   https://learn.microsoft.com/es-es/devops/deliver/what-is-continuous-delivery  
 
-https://learn.microsoft.com/es-es/devops/deliver/what-is-continuous-delivery
-
-https://www.browserstack.com/guide/continuous-delivery-in-devops
-
+2. BrowserStack — *Continuous Delivery in DevOps: A Complete Guide*  
+   https://www.browserstack.com/guide/continuous-delivery-in-devops  
