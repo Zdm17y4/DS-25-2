@@ -1,0 +1,2 @@
+crt=/mnt/c/Users/User/Documents/25-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad2-CC3S2/certs/miapp.local.crt
+key=/mnt/c/Users/User/Documents/25-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad2-CC3S2/certs/miapp.local.key
