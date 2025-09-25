@@ -1,0 +1,5 @@
+Initialized empty Git repository in C:/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad6-CC3S2/.git/
+
+On branch main
+No commits yet
+nothing to commit (create/copy files and use "git add" to track)
