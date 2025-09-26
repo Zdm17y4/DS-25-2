@@ -1,0 +1,22 @@
+f5ec1f0 Agregar ejercicio 3 sobre main.py
+5f8d4b1 Corregir error en la funcionalidad de rollback
+5381cb4 Resuelve el conflico de fusión entre la versión main y feature/advanced-feature
+9205986 Actualizar el mensaje main.py en la rama main
+8b34544 Agrega la función greet como función avanzada
+bc18896 Agrega main.py
+c5e5d41 Configura la documentación base del repositorio
+7a942af Commit inicial con README.md
+c5e6190 Agregar la estructura minima de la carpeta log
+1f7094a Agregar archivo .txt que contiene las configuraciones previo a inicializar Git
+153dbd3 Agregar la versión de Git que se usará
+405ab25 Agregar avance de la actividad 3 con la solucion de la primera y tercera pregunta
+6a53339 Avances de la actividad 2
+d425ad1 Renombrar archivo REPORT.md a REPORT
+ece5400 Agregar carpeta Actividad2-CC3S2 incluyendo REPORT en ella
+c8f709e Día 3-Evidencia, diagramas y entrega final
+ace3863 Día 2-DevSecOps y estrategia de despliegue
+b572f70 Día 1-Comparativos e imágenes base
+04421a3 Día 1-Comparativos e imágenes base
+374ac91 Día 1-Comparativos e imágenes base
+576d7d3 Estructura de actividad 1
+71c00e8 Initial commit
