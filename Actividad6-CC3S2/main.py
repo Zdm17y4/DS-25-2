@@ -1,1 +1,2 @@
-print('Hello World-actualizado en main')
+def greet():
+	print('Error corregido en la función')
