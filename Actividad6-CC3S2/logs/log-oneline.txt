@@ -1,8 +1,11 @@
 f5ec1f0 Agregar ejercicio 3 sobre main.py
 5f8d4b1 Corregir error en la funcionalidad de rollback
 5381cb4 Resuelve el conflico de fusión entre la versión main y feature/advanced-feature
-9205986 Actualizar el mensaje main.py en la rama main
 8b34544 Agrega la función greet como función avanzada
+fef7531 Agregar lo realizado por el comando stash
+e38f5c4 Agregar el cherry-pick hecho en main.py
+9205986 Actualizar el mensaje main.py en la rama main
+>>>>>>> feature/cherry-pick
 bc18896 Agrega main.py
 c5e5d41 Configura la documentación base del repositorio
 7a942af Commit inicial con README.md

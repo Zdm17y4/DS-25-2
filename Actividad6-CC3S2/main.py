@@ -5,3 +5,4 @@ greet()
 def greet():
 	print('Error corregido en la función')
 print('Cherry pick')
+print('Cherry pick')#Este cambio está en el stash
