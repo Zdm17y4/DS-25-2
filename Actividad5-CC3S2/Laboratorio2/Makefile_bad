@@ -20,10 +20,10 @@ DIST_DIR := dist
 
 all: tools lint build test package ## Construir, testear y empaquetar todo
 
-build: $(OUT_DIR)/hello.txt ## Generar out/hello.txt
+build:     $(OUT_DIR)/hello.txt ## Generar out/hello.txt
 
 $(OUT_DIR)/hello.txt: $(SRC_DIR)/hello.py
-	mkdir -p $(@D)
+    mkdir -p $(@D)
 	$(PYTHON) $< > $@
 
 clean: ## Limpiar archivos generados
