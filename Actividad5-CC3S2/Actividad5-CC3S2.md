@@ -111,6 +111,9 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
 
    Entrega: redacta 5-8 líneas explicando qué imprime `help`, por qué `.DEFAULT_GOAL := help` muestra ayuda al correr `make` sin argumentos, y la utilidad de declarar PHONY.
 
+   **Entrega:** El comando `make help` imprime una lista de los objetivos disponibles (`build`, `clean`, `help`) con una breve descripción de lo que hace cada uno, extraída de los comentarios `##` en el `Makefile`. La directiva `.DEFAULT_GOAL := help` es la razón por la que se muestra esta ayuda al ejecutar `make` sin argumentos; establece el objetivo a ejecutar por defecto. Finalmente, declarar objetivos como `.PHONY` es crucial porque les dice a `make` que no son archivos reales. Esto evita conflictos si un archivo llamado "help" o "clean" existiera, asegurando que la receta siempre se ejecute.
+
+
 2. Comprueba la generación e idempotencia de `build`. Limpia salidas previas, ejecuta `build`, verifica el contenido y repite `build` para constatar que no rehace nada si no cambió la fuente.
    Comandos:
 
@@ -124,6 +127,9 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
 
    Entrega: explica en 4-6 líneas la diferencia entre la primera y la segunda corrida, relacionándolo con el grafo de dependencias y marcas de tiempo.
 
+   **Entrega:** La diferencia es clara: en la primera ejecución (`logs/build-run1.txt`), `make` ejecuta los comandos para crear el directorio `out` y generar el archivo `out/hello.txt`. En la segunda ejecución (`logs/build-run2.txt`), `make` informa que el objetivo ya está actualizado (`'build' is up to date`). Esto ocurre porque `make` revisa las marcas de tiempo y determina que el archivo de destino (`out/hello.txt`) es más reciente que su dependencia (`src/hello.py`), por lo que no hay necesidad de reconstruirlo.
+
+
 3. Fuerza un fallo controlado para observar el modo estricto del shell y `.DELETE_ON_ERROR`. Sobrescribe `PYTHON` con un intérprete inexistente y verifica que no quede artefacto corrupto.
    Comandos:
 
@@ -135,6 +141,9 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
 
    Entrega: en 5-7 líneas, comenta cómo `-e -u -o pipefail` y `.DELETE_ON_ERROR` evitan estados inconsistentes.
 
+    **Entrega:** Al ejecutar `make build PYTHON=python4`, el proceso falla como se esperaba porque el intérprete `python4` no existe. El log `fallo-python4.txt` muestra el error "command not found". Gracias a la directiva `.DELETE_ON_ERROR` en el `Makefile`, `make` elimina automáticamente el archivo de destino (`out/hello.txt`) que estaba intentando crear. Esto evita que queden artefactos de compilación corruptos o incompletos. La posterior falla del comando `ls -l out/hello.txt` confirma que el archivo fue borrado exitosamente, demostrando la robustez del pipeline ante errores.
+
+
 4. Realiza un "ensayo" (dry-run) y una depuración detallada para observar el razonamiento de Make al decidir si rehacer o no.
    Comandos:
 
@@ -145,6 +154,8 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
    ```
 
    Entrega: resume en 6-8 líneas qué significan fragmentos resultantes.
+
+   **Entrega:** El comando `make -n build` (dry-run) no ejecuta nada, simplemente imprime los comandos que *se ejecutarían* para construir el objetivo. El log `dry-run-build.txt` muestra el plan: crear el directorio `out` y luego ejecutar el script de Python. Por otro lado, `make -d build` (debug) es mucho más detallado. El log `make-d.txt` revela el proceso de pensamiento de `make`: comprueba si el objetivo `out/hello.txt` existe, ve que no, y por lo tanto decide que debe ejecutar la receta asociada para crearlo a partir de su dependencia `src/hello.py`. Es una herramienta para entender *por qué* `make` decide reconstruir algo.
 
 5. Demuestra la incrementalidad con marcas de tiempo. Primero toca la **fuente** y luego el **target** para comparar comportamientos.
    Comandos:
@@ -159,6 +170,8 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
 
    Entrega: explica en 5-7 líneas por qué cambiar la fuente obliga a rehacer, mientras que tocar el target no forja trabajo extra.
 
+    **Entrega:** Al usar `touch src/hello.py`, su fecha de modificación se vuelve más reciente que la de `out/hello.txt`, por lo que `make` reconstruye el objetivo. Por el contrario, al tocar `out/hello.txt`, este se vuelve más reciente que su dependencia, y `make` correctamente determina que no es necesario hacer nada. Esto demuestra el mecanismo de `make` para evitar compilaciones innecesarias, basándose en las marcas de tiempo de los archivos.
+
 6. Ejecuta verificación de estilo/formato **manual** (sin objetivos `lint/tools`). Si las herramientas están instaladas, muestra sus diagnósticos; si no, deja evidencia de su ausencia.
    Comandos:
 
@@ -168,6 +181,8 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
    ```
 
    Entrega: en 4-6 líneas, interpreta advertencias/sugerencias (o comenta la ausencia de herramientas y cómo instalarlas en tu entorno).
+
+    **Entrega:** `shellcheck` es un linter que analiza scripts de shell en busca de errores y malas prácticas, garantizando su robustez. Por su parte, `shfmt` es un formateador que asegura un estilo de código consistente y legible en el `Makefile`. Ejecutar estas herramientas, como se evidencia en los logs, es un paso clave para mantener la calidad y mantenibilidad del código que automatiza nuestro proyecto.
 
 7. Construye un paquete **reproducible** de forma manual, fijando metadatos para que el hash no cambie entre corridas idénticas. Repite el empaquetado y compara hashes.
    Comandos:
@@ -188,6 +203,10 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
 
    Entrega: pega el hash y explica en 5-7 líneas cómo `--sort=name`, `--mtime=@0`, `--numeric-owner` y `gzip -n` eliminan variabilidad.
 
+   **Entrega:** Este ejercicio demuestra la reproducibilidad de la compilación. Al generar el paquete `dist/app.tar.gz` dos veces, los hashes SHA256 resultantes son idénticos, como se ve en `logs/sha256-1.txt` y `logs/sha256-2.txt`. La salida vacía del comando `diff` confirma que los archivos son bit a bit iguales. Esto se logra gracias a las opciones de `tar` en el `Makefile` (`--sort=name`, `--mtime`), que eliminan las variaciones de metadatos como las fechas de modificación.
+
+
+
 8. Reproduce el error clásico "missing separator" **sin tocar el Makefile original**. Crea una copia, cambia el TAB inicial de una receta por espacios, y confirma el error.
    Comandos:
 
@@ -198,6 +217,9 @@ Define variables de conveniencia: `PYTHON ?= python3` (sobrescribible desde el e
    ```
 
    Entrega: explica en 4-6 líneas por qué Make exige TAB al inicio de líneas de receta y cómo diagnosticarlo rápido.
+
+   **Entrega:** El error "missing separator" se reproduce exitosamente al reemplazar el carácter de tabulación inicial de una receta por espacios en `Makefile_bad`. El log `error-missing-separator.txt` captura este fallo clásico. Esto demuestra una regla sintáctica fundamental de `make`: las líneas de comando bajo un objetivo deben estar sangradas con un carácter de tabulación literal, no con espacios.
+
 
 #### 1.3 Crear un script Bash 
 
@@ -287,11 +309,91 @@ run_tests "${SRC_DIR}/hello.py"
 
 * Ejecuta ./scripts/run\_tests.sh en un repositorio limpio. Observa las líneas "Demostrando pipefail": primero sin y luego con pipefail.
   Verifica que imprime "Test pasó" y termina exitosamente con código 0 (`echo $?`).
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ bash scripts/run_tests.sh 
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Test pasó: Hello, World!
+  ```
+
 * Edita src/hello.py para que no imprima "Hello, World!". Ejecuta el script: verás "Test falló", moverá hello.py a hello.py.bak, y el **trap** lo restaurará. Confirma código 2 y ausencia de .bak.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ bash scripts/run_tests.sh 
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Test falló: salida inesperada
+  ```
 * Ejecuta `bash -x scripts/run_tests.sh`. Revisa el trace: expansión de `tmp` y `PY`, llamadas a funciones, here-doc y tuberías. Observa el trap armado al inicio y ejecutándose al final; estado 0.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ bash -x scripts/run_tests.sh 
+  + set -euo pipefail
+  + IFS='
+          '
+  + umask 027
+  + set -o noclobber
+  + PY=python3
+  + SRC_DIR=src
+  ++ mktemp
+  + tmp=/tmp/tmp.eC0g67Lhof
+  + trap 'cleanup $?' EXIT INT TERM
+  + echo 'Demostrando pipefail:'
+  Demostrando pipefail:
+  + set +o pipefail
+  + false
+  + true
+  + echo 'Sin pipefail: el pipe se considera exitoso (status 0).'
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  + set -o pipefail
+  + false
+  + true
+  + echo 'Con pipefail: se detecta el fallo (status != 0).'
+  Con pipefail: se detecta el fallo (status != 0).
+  + cat
+  + check_deps
+  + deps=('python3' 'grep')
+  + local -a deps
+  + for dep in "${deps[@]}"
+  + command -v python3
+  + for dep in "${deps[@]}"
+  + command -v grep
+  + run_tests src/hello.py
+  + local script=src/hello.py
+  + local output
+  ++ python3 src/hello.py
+  + output='Hello, Mundo!'
+  + echo 'Hello, Mundo!'
+  + grep -Fq 'Hello, World!'
+  + echo 'Test falló: salida inesperada'
+  Test falló: salida inesperada
+  + mv -- src/hello.py src/hello.py.bak
+  + exit 2
+  + cleanup 2
+  + rc=2
+  + rm -f /tmp/tmp.eC0g67Lhof
+  + '[' -f src/hello.py.bak ']'
+  + mv -- src/hello.py.bak src/hello.py
+  + exit 2
+  ```
+
 * Sustituye `output=$("$PY" "$script")` por `("$PY" "$script")`. Ejecuta script. `output` queda indefinida; con `set -u`, al referenciarla en `echo` aborta antes de `grep`. El trap limpia y devuelve código distinto no-cero.
 
- > En Bash, *trap* registra acciones a ejecutar cuando ocurren señales o eventos (EXIT, INT, ERR).
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ bash scripts/run_tests.sh 
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Hello, Mundo!
+  scripts/run_tests.sh: line 45: output: unbound variable
+  scripts/run_tests.sh: line 19: wait_for: No record of process 3323
+  Test falló: salida inesperada
+  ```
+
+> En Bash, *trap* registra acciones a ejecutar cuando ocurren señales o eventos (EXIT, INT, ERR).
 > Permite limpiar recursos, restaurar archivos, cerrar procesos, registrar errores y preservar códigos de salida correctamente.
 
 ### Parte 2: Leer - Analizar un repositorio completo
