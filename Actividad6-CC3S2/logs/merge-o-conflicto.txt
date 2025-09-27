@@ -1,0 +1,24 @@
+Auto-merging main.py
+CONFLICT (content): Merge conflict in main.py
+Automatic merge failed; fix conflicts and then commit the result.
+
+Cómo resolví el conflicto:
+
+El conflicto ocurrió al intentar fusionar la rama `feature/advanced-feature` en `main`, ya que ambas ramas tenían cambios en las mismas líneas del archivo `main.py`.
+
+1.  Identificación: Git marcó el archivo `main.py` como en conflicto.
+
+2.  Edición Manual: Abrí `main.py` en el editor.
+    El archivo contenía los marcadores de conflicto de Git
+    (`<<<<<<< HEAD`, `=======`, `>>>>>>> feature/advanced-feature`).
+
+3.  Resolución: Analicé ambos bloques de código (el de `HEAD` y el de
+    `feature/advanced-feature`) y decidí qué cambios conservar.
+    Eliminé los marcadores de conflicto y el código no deseado,
+    dejando la versión final del código.
+
+4.  Staging: Marqué el conflicto como resuelto usando el comando
+    `git add main.py`.
+
+5.  Commit: Finalicé la fusión ejecutando `git commit`, lo que creó un
+    nuevo "merge commit" para registrar la resolución.
