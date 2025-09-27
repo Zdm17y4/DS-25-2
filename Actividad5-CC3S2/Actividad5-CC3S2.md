@@ -512,15 +512,204 @@ help: ## Mostrar ayuda
 
 **Ejercicios:**
 * Ejecuta `make -n all` para un dry-run que muestre comandos sin ejecutarlos; identifica expansiones `$@` y `$<`, el orden de objetivos y cómo `all` encadena `tools`, `lint`, `build`, `test`, `package`.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make -n all
+  command -v python3 >/dev/null || { echo "Falta python3"; exit 1; }
+  command -v shellcheck >/dev/null || { echo "Falta shellcheck"; exit 1; }
+  command -v shfmt >/dev/null || { echo "Falta shfmt"; exit 1; }
+  command -v grep >/dev/null || { echo "Falta grep"; exit 1; }
+  command -v awk >/dev/null || { echo "Falta awk"; exit 1; }
+  command -v tar >/dev/null || { echo "Falta tar"; exit 1; }
+  tar --version 2>/dev/null | grep -q 'GNU tar' || { echo "Se requiere GNU tar"; exit 1; }     
+  command -v sha256sum >/dev/null || { echo "Falta sha256sum"; exit 1; }
+  shellcheck scripts/run_tests.sh
+  shfmt -d scripts/run_tests.sh
+  command -v ruff >/dev/null 2>&1 && ruff check src || echo "ruff no instalado; omitiendo lint Python"
+  mkdir -p out
+  python3 src/hello.py > out/hello.txt
+  scripts/run_tests.sh
+  python3 -m unittest discover -s tests -v
+  mkdir -p dist
+  tar --sort=name --owner=0 --group=0 --numeric-owner --mtime='UTC 1970-01-01' -czf dist/app.tar.gz -C out hello.txt
+  ```
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make lint
+  shellcheck scripts/run_tests.sh
+  shfmt -d scripts/run_tests.sh
+  --- scripts/run_tests.sh.orig
+  +++ scripts/run_tests.sh
+  make: *** [Makefile:40: lint] Error 1
+  ```
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make format 
+  shfmt -w scripts/run_tests.sh
+  ```
+
 * Ejecuta `make -d build` y localiza líneas "Considerando el archivo objetivo" y "Debe deshacerse",  explica por qué recompila o no `out/hello.txt` usando marcas de tiempo y cómo `mkdir -p $(@D)` garantiza el directorio.
+  
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make -d build 
+  GNU Make 4.3
+  Built for x86_64-pc-linux-gnu
+  Copyright (C) 1988-2020 Free Software Foundation, Inc.
+  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+  This is free software: you are free to change and redistribute it.
+  There is NO WARRANTY, to the extent permitted by law.
+  Reading makefiles...
+  Reading makefile 'Makefile'...
+  Updating makefiles....
+  Considering target file 'Makefile'.
+    Looking for an implicit rule for 'Makefile'.
+    No implicit rule found for 'Makefile'.
+    Finished prerequisites of target file 'Makefile'.
+  No need to remake target 'Makefile'.
+  Updating goal targets....
+  Considering target file 'build'.
+  File 'build' does not exist.
+    Considering target file 'out/hello.txt'.
+    File 'out/hello.txt' does not exist.
+      Considering target file 'src/hello.py'.
+      Looking for an implicit rule for 'src/hello.py'.
+      No implicit rule found for 'src/hello.py'.
+      Finished prerequisites of target file 'src/hello.py'.
+      No need to remake target 'src/hello.py'.
+    Finished prerequisites of target file 'out/hello.txt'.
+    Must remake target 'out/hello.txt'.
+  mkdir -p out
+  Putting child 0x5fbd2381d560 (out/hello.txt) PID 3878 on the chain.
+  Live child 0x5fbd2381d560 (out/hello.txt) PID 3878
+  Reaping winning child 0x5fbd2381d560 PID 3878 
+  python3 src/hello.py > out/hello.txt
+  Live child 0x5fbd2381d560 (out/hello.txt) PID 3879
+  Reaping winning child 0x5fbd2381d560 PID 3879 
+  Removing child 0x5fbd2381d560 PID 3879 from chain.
+    Successfully remade target file 'out/hello.txt'.
+  Finished prerequisites of target file 'build'.
+  Must remake target 'build'.
+  Successfully remade target file 'build'.
+  ```
+
 * Fuerza un entorno con BSD tar en PATH y corre `make tools`; comprueba el fallo con "Se requiere GNU tar" y razona por qué `--sort`, `--numeric-owner` y `--mtime` son imprescindibles para reproducibilidad determinista.
 * Ejecuta `make verify-repro`; observa que genera dos artefactos y compara `SHA256_1` y `SHA256_2`. Si difieren, hipótesis: zona horaria, versión de tar, contenido no determinista o variables de entorno no fijadas.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make verify-repro 
+  SHA256_1=456793d51f0ea5bc7dc10f9023550cc63abea2511f0b1b393276dbea08d1e422
+  SHA256_2=456793d51f0ea5bc7dc10f9023550cc63abea2511f0b1b393276dbea08d1e422
+  OK: reproducible
+  ```
+
+
 * Corre `make clean && make all`, cronometrando; repite `make all` sin cambios y compara tiempos y logs. Explica por qué la segunda es más rápida gracias a timestamps y relaciones de dependencia bien declaradas.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make clean && make all
+  rm -rf out dist
+  shellcheck scripts/run_tests.sh
+  shfmt -d scripts/run_tests.sh
+  ruff no instalado; omitiendo lint Python
+  mkdir -p out
+  python3 src/hello.py > out/hello.txt
+  scripts/run_tests.sh
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Hello, Mundo!
+  scripts/run_tests.sh: line 45: output: unbound variable
+  scripts/run_tests.sh: line 19: wait_for: No record of process 5891
+  Test falló: salida inesperada
+  make: *** [Makefile:29: test] Error 2
+  ```
+
 * Ejecuta `PYTHON=python3.12 make test` (si existe). Verifica con `python3.12 --version` y mensajes que el override funciona gracias a `?=` y a `PY="${PYTHON:-python3}"` en el script; confirma que el artefacto final no cambia respecto al intérprete por defecto.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ PYTHON=python3.12 make test
+  scripts/run_tests.sh
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Hello, Mundo!
+  scripts/run_tests.sh: line 45: output: unbound variable
+  scripts/run_tests.sh: line 19: wait_for: No record of process 5932
+  Test falló: salida inesperada
+  make: *** [Makefile:29: test] Error 2
+  ```
+
 * Ejecuta `make test`; describe cómo primero corre `scripts/run_tests.sh` y luego `python -m unittest`. Determina el comportamiento si el script de pruebas falla y cómo se propaga el error a la tarea global.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make test
+  scripts/run_tests.sh
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Hello, Mundo!
+  scripts/run_tests.sh: line 45: output: unbound variable
+  scripts/run_tests.sh: line 19: wait_for: No record of process 5957
+  Test falló: salida inesperada
+  make: *** [Makefile:29: test] Error 2
+  ```
+
 * Ejecuta `touch src/hello.py` y luego `make all`; identifica qué objetivos se rehacen (`build`, `test`, `package`) y relaciona el comportamiento con el timestamp actualizado y la cadena de dependencias especificada.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ touch src/hello.py 
+  ```
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make all
+  shellcheck scripts/run_tests.sh
+  shfmt -d scripts/run_tests.sh
+  ruff no instalado; omitiendo lint Python
+  mkdir -p out
+  python3 src/hello.py > out/hello.txt
+  scripts/run_tests.sh
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  Hello, Mundo!
+  scripts/run_tests.sh: line 45: output: unbound variable
+  scripts/run_tests.sh: line 19: wait_for: No record of process 6019
+  Test falló: salida inesperada
+  make: *** [Makefile:29: test] Error 2
+  ```
+
 * Ejecuta `make -j4 all` y observa ejecución concurrente de objetivos independientes; confirma resultados idénticos a modo secuencial y explica cómo `mkdir -p $(@D)` y dependencias precisas evitan condiciones de carrera.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make -j4 all
+  shellcheck scripts/run_tests.sh
+  scripts/run_tests.sh
+  mkdir -p dist
+  tar --sort=name --owner=0 --group=0 --numeric-owner --mtime='UTC 1970-01-01' -czf dist/app.tar.gz -C out hello.txt
+  Demostrando pipefail:
+  Sin pipefail: el pipe se considera exitoso (status 0).
+  Con pipefail: se detecta el fallo (status != 0).
+  shfmt -d scripts/run_tests.sh
+  Hello, Mundo!
+  scripts/run_tests.sh: line 45: output: unbound variable
+  scripts/run_tests.sh: line 19: wait_for: No record of process 6061
+  Test falló: salida inesperada
+  make: *** [Makefile:29: test] Error 2
+  make: *** Waiting for unfinished jobs....
+  ruff no instalado; omitiendo lint Python
+  ```
+
 * Ejecuta `make lint` y luego `make format`; interpreta diagnósticos de `shellcheck`, revisa diferencias aplicadas por `shfmt` y, si está disponible, considera la salida de `ruff` sobre `src/` antes de empaquetar.
+
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make lint
+  shellcheck scripts/run_tests.sh
+  shfmt -d scripts/run_tests.sh
+  ruff no instalado; omitiendo lint Python
+  ```
+  ```bash
+  miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make format 
+  shfmt -w scripts/run_tests.sh
+  ```
 
 ### Parte 3: Extender
 
