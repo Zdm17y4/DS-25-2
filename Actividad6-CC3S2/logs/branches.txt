@@ -1,0 +1,1 @@
+* main 8f70362 [origin/main] Resolver conflictos con la otra rama
