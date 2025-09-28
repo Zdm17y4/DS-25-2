@@ -1,0 +1,22 @@
+* 254ffd5 Agregar feature3.txt
+* c11c197 Agregar feature2.txt
+* d173c76 Agregar feature1.txt
+* ff28bff Agregar update.txt
+* e452cca Agregar archivo1.txt
+* efeb92d Revert "Merge branch 'feature-para-merge'"
+* e472a69 Merge branch 'feature-para-merge'
+| * adfdabe Cambio en feature
+|/  
+* 5e5d954 Revert "Arreglar index"
+* 8f0ab4c Arreglar index
+* 5928c39 Merge branch 'feature-update'
+| * 7d9f323 Agregar index.html en feature-update
+* | b2a9f38 Agregar nuevo commit a main
+|/  
+* 7e5a182 Agregar index.html
+* 8d29772 Squash de feature-3: documentación estándar
+* f199130 Merge branch 'add-feature'
+| * a0703c9 Agregar segunda linea en README
+| * 094e0ed Agregar primera linea en README
+|/  
+* 846fa1d Initial commit
