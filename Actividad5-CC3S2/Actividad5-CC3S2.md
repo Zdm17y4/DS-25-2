@@ -724,6 +724,24 @@ make lint
 make format
 ruff check src || true
 ```
+```bash
+miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make lint
+shellcheck scripts/run_tests.sh
+
+In scripts/run_tests.sh line 45:
+    if [ $? == 0 ]    # Error deliberado: usando == en lugar de -eq y sin comillas
+        ^-- SC2181 (style): Check exit code directly with e.g. 'if mycmd;', not indirectly with $?.
+
+For more information:
+https://www.shellcheck.net/wiki/SC2181 -- Check exit code directly with e.g...
+make: *** [Makefile:39: lint] Error 1
+miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make lint
+shellcheck scripts/run_tests.sh
+shfmt -d scripts/run_tests.sh
+ruff no instalado; omitiendo lint Python
+miguel17@LAPTOP-RNN6O6HV:/mnt/c/Users/User/Documents/2025-2/DESARROLLO DE SOFTWARE/DS-25-2/Actividad5-CC3S2/Laboratorio2$ make format
+shfmt -w scripts/run_tests.sh
+```
 
 #### 3.2 Rollback adicional
 
