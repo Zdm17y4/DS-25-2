@@ -1,0 +1,35 @@
+*   9a0a917 (HEAD -> main) Add 'vendor/demo/' from commit '1a6d274d22f31ad64f63252c5327d05bc46e1a25'
+|\  
+| * 1a6d274 (demo/main) Agregar demo.txt en repo-demo
+* 3e819a7 (feat-b) Agregar b.txt
+* f8f8053 (feat-a) Agregar a.txt
+*   522b024 Merge: Integrar feature-validate tras validacion
+|\  
+| * 6974b2d (feature-validate) Agregar script.sh
+* | cc2de50 Agregar README.md
+|/  
+* 254ffd5 (feature-rebase) Agregar feature3.txt
+* c11c197 Agregar feature2.txt
+* d173c76 Agregar feature1.txt
+* ff28bff Agregar update.txt
+* e452cca (feature-ffonly) Agregar archivo1.txt
+* efeb92d Revert "Merge branch 'feature-para-merge'"
+*   e472a69 Merge branch 'feature-para-merge'
+|\  
+| * adfdabe (feature-para-merge) Cambio en feature
+|/  
+* 5e5d954 Revert "Arreglar index"
+* 8f0ab4c Arreglar index
+*   5928c39 Merge branch 'feature-update'
+|\  
+| * 7d9f323 (feature-update) Agregar index.html en feature-update
+* | b2a9f38 Agregar nuevo commit a main
+|/  
+* 7e5a182 Agregar index.html
+* 8d29772 Squash de feature-3: documentación estándar
+*   f199130 (feature-3) Merge branch 'add-feature'
+|\  
+| * a0703c9 (add-feature) Agregar segunda linea en README
+| * 094e0ed Agregar primera linea en README
+|/  
+* 846fa1d (feature-1) Initial commit
